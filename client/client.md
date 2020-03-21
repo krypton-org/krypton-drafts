@@ -17,7 +17,7 @@ Clients must be thread-safe, such that a client instantiated in one thread, can 
 
 ### API
 
-User clients must implement the following public API.
+User clients must implement the following public API:
 
 #### Unauthenticated requests
 
@@ -54,7 +54,7 @@ except UsernameAlreadyExistsError:
   print('Username already exists...')
 ```
 
-Internationalization is to be performed by the client.
+Error messages and their internationalization must be provided by the client.
 
 #### Token Invalidation
 
