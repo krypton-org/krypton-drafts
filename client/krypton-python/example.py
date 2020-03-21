@@ -14,7 +14,7 @@ print("Register success")
 user = client.login(email, password)
 print(f"Login success: {user}")
 
-client.update(username=f"{username}-update")
+user = client.update(username=f"{username}-update")
 print(f"Update success: {user}")
 
 client.delete(password)
