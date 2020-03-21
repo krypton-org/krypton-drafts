@@ -1,0 +1,29 @@
+// Compile with dot -T png -o client.png client.dot
+digraph {
+    graph [resolution=300];
+    node [fontname="Fira Code Regular"]
+    edge [fontname="Fira Code Regular"];
+
+    // logged-out -> logged-in
+    a_logged_out [label="logged-out", shape="box", style="rounded"];
+    a_logged_in  [label="logged-in" , shape="box", style="rounded"];
+    a_login      [label="login"     , shape="parallelogram"];
+
+    a_logged_out -> a_login;
+    a_login -> a_logged_out[label="error", color="firebrick2", fontcolor="firebrick2"];
+    a_login -> a_logged_in[label="success", color="chartreuse3", fontcolor="chartreuse3"];
+
+    // logged-in -> requests
+    b_logged_out [label="logged-out", shape="box", style="rounded"];
+    b_logged_in  [label="logged-in" , shape="box", style="rounded"];
+    b_request    [label="authenticated\nrequest", shape="parallelogram"];
+    b_refresh_token [label="refreshToken", shape="parallelogram"];
+
+    b_logged_in -> b_request;
+    b_request -> b_refresh_token[label="error", color="firebrick2", fontcolor="firebrick2"];
+    b_request -> b_logged_in[label="success", color="chartreuse3", fontcolor="chartreuse3"];
+    b_refresh_token -> b_logged_out[label="error", color="firebrick2", fontcolor="firebrick2"];
+    b_refresh_token -> b_request[label="success", color="chartreuse3", fontcolor="chartreuse3"];
+
+    {rank=same; a_logged_out b_logged_in}
+}
