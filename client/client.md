@@ -26,8 +26,8 @@ User clients must implement the following public API.
 - `userById(id: str) -> (Optional[Dict], Optional[Error])`
 - `userByIds(ids: List[str]) -> (List[Dict], Optional[Error])`
 
-- In the `login` function, the user is decoded from the token returned by the server.
-- In the `user...` functions, all public fields are requested.
+In the `login` function, the user is decoded from the token returned by the server.  
+In the `user...` functions, all public fields are requested.
 
 #### Authenticated requests
 
