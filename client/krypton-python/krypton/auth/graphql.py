@@ -1,4 +1,4 @@
-# Minimalist GraphQL spec. implementation
+# Minimal(ist) GraphQL spec. implementation
 # http://spec.graphql.org/June2018
 
 # http://spec.graphql.org/June2018/#sec-Language.Arguments

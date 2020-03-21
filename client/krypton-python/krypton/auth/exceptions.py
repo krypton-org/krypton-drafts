@@ -1,4 +1,5 @@
-class GraphQLAuthException(Exception):
+class KryptonAuthException(Exception):
+    api_type = None
     mapping = {}
 
     def __new__(cls, error):
@@ -13,19 +14,21 @@ class GraphQLAuthException(Exception):
         super().__init__(error["message"])
 
 
-class GraphQLError(GraphQLAuthException):
+class GraphQLError(KryptonAuthException):
     api_type = "GraphQLError"
 
-class EmailAlreadyExistsError(GraphQLAuthException):
+
+class EmailAlreadyExistsError(KryptonAuthException):
     api_type = "EmailAlreadyExistsError"
 
-class UsernameAlreadyExistsError(GraphQLAuthException):
+
+class UsernameAlreadyExistsError(KryptonAuthException):
     api_type = "UsernameAlreadyExistsError"
 
-class WrongPasswordError(GraphQLAuthException):
+
+class WrongPasswordError(KryptonAuthException):
     api_type = "WrongPasswordError"
 
-class UserNotFound(GraphQLAuthException):
-    api_type = "UserNotFound"
 
-# TODO
+class UserNotFound(KryptonAuthException):
+    api_type = "UserNotFound"
