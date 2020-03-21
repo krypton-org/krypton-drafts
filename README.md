@@ -2,4 +2,4 @@
 
 Kyrpton working documents.
 
-- [**Client Specification**](client/client.md)
+- [**Client Specification**](client/)
