@@ -6,6 +6,8 @@ There is two types of clients:
 - *User clients*: they provide an API to manage a single user session in a client application. In the future, they will also provide UI views to ease the integration into applications.
 - *Middlewares*: they integrate with server frameworks (Django, Express, etc.) to verify token signatures, and inject the decoded token in the request.
 
+As far as possible, clients must follow the idioms and conventions of the target platform/language.
+
 ## User Clients
 
 ### State
@@ -38,25 +40,27 @@ In the `user...` functions, all public fields are requested.
 
 TBD
 
-## Middlewares
+### Error Handling
 
-TBD.
+#### Exceptions
 
-## Error Handling
+If permitted by the language, errors must be raised as typed exceptions, such that the client can be used as follow:
 
-### Exceptions
+```python
+client = KryptonClient()
+try:
+  client.register(...)
+except UsernameAlreadyExistsError:
+  print('Username already exists...')
+```
 
-If permitted by the language, errors must be raised as typed exceptions.
+Internationalization is to be performed by the client.
 
-### Token Invalidation
+#### Token Invalidation
 
 <img src="client.png" height=400px />
 
-### Exceptions
 
+## Middlewares
 
-
-Errors must be typed and returned to the client
-using exceptions if possible.
-
-Try to use idiomatic concepts for the target platform/language.
+TBD.
