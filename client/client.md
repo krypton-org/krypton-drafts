@@ -69,9 +69,9 @@ Error messages and their internationalization must be provided by the client.
 The user token (JWT) can be invalidated at any time, either because it expired, or because it was deleted from the server.
 
 1. For every [authenticated request](#Authenticated-requests) the client must check whether or not an error was returned from the server.
-2. If a `UserNotFoundError` is returned, it must try to obtain a new token using the `refreshToken` mutation.
+2. If a `UserNotFound` is returned, it must try to obtain a new token using the `refreshToken` mutation.
 3. If a new token is obtained, then it must perform the request again, and return the result to the user.
-4. Otherwise the user is considered as logged-out, and a `UserNotFoundError` exception is raised.
+4. Otherwise the user is considered as logged-out, and a `UserNotFound` exception is raised.
 
 <img src="client.png" height=400px />
 
