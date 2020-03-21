@@ -2,7 +2,7 @@
 
 Example Python client for GraphQL-Auth-Service.
 
-**NOTE:** Token invalidation has not been tested.
+**NOTE:** Token invalidation has not been tested.  
 **NOTE:** The implementation was done quickly and is only an example of what is possible.
 In particular the self-contained GraphQL implementation is a bit overkill, and it may be
 easier/preferable to directly use strings.
