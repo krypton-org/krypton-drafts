@@ -17,7 +17,7 @@ Clients must be thread-safe, such that a client instantiated in one thread, can 
 
 ### API
 
-User clients must implement the following public API:
+User clients must implement the following **public** API:
 
 #### Unauthenticated requests
 
@@ -35,6 +35,14 @@ In the `user...` functions, all public fields are requested.
 
 - `update(**fields) -> Optional[Error]`
 - `delete(password: str) -> Optional[Error]`
+
+#### Other requests
+
+The following functions may be implemented in the public or private API of the client.  
+They are typically not used directly by the user.
+
+- `publicKey() -> str`
+- `refreshToken() -> (Optional[Dict], Optional[Error])`
 
 ### UI Views
 
@@ -57,6 +65,13 @@ except UsernameAlreadyExistsError:
 Error messages and their internationalization must be provided by the client.
 
 #### Token Invalidation
+
+The user token (JWT) can be invalidated at any time, either because it expired, or because it was deleted from the server.
+
+1. For every [authenticated request](#Authenticated-requests) the client must check whether or not an error was returned from the server.
+2. If a `UserNotFoundError` is returned, it must try to obtain a new token using the `refreshToken` mutation.
+3. If a new token is obtained, then it must perform the request again, and return the result to the user.
+4. Otherwise the user is considered as logged-out, and a `UserNotFoundError` exception is raised.
 
 <img src="client.png" height=400px />
 
