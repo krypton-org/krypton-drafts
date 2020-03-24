@@ -36,8 +36,8 @@ User clients must implement the following **public** API:
 - `userCount(**filters) -> integer`
 - `userPagination(page: int, perPage: int, sort: enum[sorts], **filters) -> (Optional[Dict] , Optional[Error])`
 
-The choice between `registerWithEmail` and `registerWithUsernameAndEmail` functions depends on the option `hasUsername: boolean` set on Krypton Authentication (server side).  
-In the `login` function, the user is decoded from the token returned by the server.
+The choice between `registerWithEmail` and `registerWithUsernameAndEmail` functions depends on the option `hasUsername: boolean` set on Krypton Authentication (server side).
+In the `login` and `refreshToken` functions, the user is decoded from the token returned by the server.
 In the `user...` functions, all public fields are requested.**
 
 #### Authenticated requests
@@ -45,12 +45,11 @@ In the `user...` functions, all public fields are requested.**
 - `update(**fields) -> (Optional[Dict], Optional[Error])`
 - `delete(password: str) -> (Optional[Error])`
 - `changePassword(oldPassword: str, newPassord: str) -> Optional[Error]`
-- `me() -> Optional[Dict]`
 - `sendVerificationEmail() -> boolean`
 
 #### Other requests
 
-The following functions may be implemented in the public or private API of the client.  
+The following functions may be implemented in the public or private API of the client.
 They are typically not used directly by the user.
 
 - `publicKey() -> str`
