@@ -1,34 +1,64 @@
-class KryptonAuthException(Exception):
-    api_type = None
-    mapping = {}
+from typing import Dict
 
-    def __new__(cls, error):
-        subclass = cls.mapping[error["type"]]
-        return super().__new__(subclass)
 
-    def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
-        cls.mapping[cls.api_type] = cls
+class KryptonException(Exception):
+    api_type = ""
 
-    def __init__(self, error):
+    def __init__(self, error: Dict):
         super().__init__(error["message"])
 
 
-class GraphQLError(KryptonAuthException):
+class GraphQLError(KryptonException):
     api_type = "GraphQLError"
 
 
-class EmailAlreadyExistsError(KryptonAuthException):
+class EmailAlreadyExistsError(KryptonException):
     api_type = "EmailAlreadyExistsError"
 
 
-class UsernameAlreadyExistsError(KryptonAuthException):
+class UsernameAlreadyExistsError(KryptonException):
     api_type = "UsernameAlreadyExistsError"
 
 
-class WrongPasswordError(KryptonAuthException):
+class WrongPasswordError(KryptonException):
     api_type = "WrongPasswordError"
 
 
-class UserNotFound(KryptonAuthException):
+class UpdatePasswordTooLateError(KryptonException):
+    api_type = "UpdatePasswordTooLateError"
+
+
+class EmailNotSentError(KryptonException):
+    api_type = "EmailNotSentError"
+
+
+class UserNotFound(KryptonException):
     api_type = "UserNotFound"
+
+
+class EmailAlreadyConfirmedError(KryptonException):
+    api_type = "EmailAlreadyConfirmedError"
+
+
+class UserValidationError(KryptonException):
+    api_type = "UserValidationError"
+
+
+class AlreadyLoggedInError(KryptonException):
+    api_type = "AlreadyLoggedInError"
+
+
+exceptions = [
+    GraphQLError,
+    EmailAlreadyExistsError,
+    UsernameAlreadyExistsError,
+    WrongPasswordError,
+    UpdatePasswordTooLateError,
+    EmailNotSentError,
+    UserNotFound,
+    EmailAlreadyConfirmedError,
+    UserValidationError,
+    AlreadyLoggedInError,
+]
+
+ExceptionMapping = {exc.api_type: exc for exc in exceptions}
