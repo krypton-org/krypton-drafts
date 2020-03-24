@@ -1,4 +1,4 @@
-# kyrpton-drafts
+# krypton-drafts
 
 Kyrpton working documents.
 
