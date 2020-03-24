@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Tuple
 import jwt
 import requests
 
-from .exceptions import ExceptionMapping, UserNotFound
+from .exceptions import ExceptionMapping, UnauthorizedError
 from .queries import (
     DeleteQuery,
     LoginQuery,
@@ -13,16 +13,23 @@ from .queries import (
     UpdateQuery,
 )
 
-# TODO: docstrings
-# TODO: Queries not needed anymore?
+
+class UserToken:
+    def __init__(self, user, token):
+        self.user = user
+        self.token = token
+
+    @classmethod
+    def from_token(cls, token):
+        user = jwt.decode(token, verify=False)
+        return cls(user, token)
 
 
-class BaseKryptonAuthClient:
+class KryptonAuthClient:
     def __init__(self, endpoint: str):
         self.endpoint = endpoint
         self.session = requests.Session()
-        self.user: Optional[Dict] = None
-        self.token: Optional[str] = None
+        self.token: Optional[UserToken] = None
 
     def __post(self, q: Query) -> Dict:
         res = self.session.post(self.endpoint, json=q.to_dict()).json()
@@ -34,11 +41,14 @@ class BaseKryptonAuthClient:
     def __query(self, q: Query) -> Dict:
         data = self.__post(q)
 
-        # TODO: Also look into "updateMe" for token
-        token = (data.get("login", {}) or data.get("refreshToken", {})).get("token")
+        token = (
+            data.get("login", {})
+            or data.get("refreshToken", {})
+            or data.get("updateMe", {})
+        ).get("token")
+
         if token:
-            self.user = jwt.decode(token, verify=False)
-            self.token = token
+            self.token = UserToken.from_token(token)
             self.session.headers.update({"Authorization": f"Bearer {token}"})
 
         return data
@@ -46,8 +56,7 @@ class BaseKryptonAuthClient:
     def query(self, q: Query) -> Dict:
         try:
             result = self.__query(q)
-        except:  # Unauthorized:
-            # Authenticated queries: refresh token and retry.
+        except UnauthorizedError:
             self.refresh()
             result = self.__query(q)
         return result
@@ -55,8 +64,6 @@ class BaseKryptonAuthClient:
     def refresh(self) -> None:
         self.query(RefreshQuery())
 
-
-class KryptonAuthClient(BaseKryptonAuthClient):
     def register(self, username: str, email: str, password: str, **kwargs: Any):
         fields = {"username": username, "email": email, "password": password, **kwargs}
         self.query(RegisterQuery(fields=fields))

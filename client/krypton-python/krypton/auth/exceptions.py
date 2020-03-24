@@ -36,6 +36,10 @@ class UserNotFound(KryptonException):
     api_type = "UserNotFound"
 
 
+class UnauthorizedError(KryptonException):
+    api_type = "UnauthorizedError"
+
+
 class EmailAlreadyConfirmedError(KryptonException):
     api_type = "EmailAlreadyConfirmedError"
 
@@ -56,6 +60,7 @@ exceptions = [
     UpdatePasswordTooLateError,
     EmailNotSentError,
     UserNotFound,
+    UnauthorizedError,
     EmailAlreadyConfirmedError,
     UserValidationError,
     AlreadyLoggedInError,

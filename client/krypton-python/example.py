@@ -14,10 +14,10 @@ client.register(username, email, password)
 print("Register success")
 
 client.login(email, password)
-print(f"Login success: {client.user}")
+print(f"Login success: {client.token.user}")
 
 client.update(username=f"{username}-update")
-print(f"Update success: {client.user}")
+print(f"Update success: {client.token.user}")
 
 client.delete(password)
 print("Delete success")
