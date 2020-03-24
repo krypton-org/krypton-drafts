@@ -1,9 +1,12 @@
 [tool.poetry]
-name = "krypton-python"
+name = "krypton-python-simple"
 version = "0.1.0"
 description = ""
 authors = ["Maxime Mouchet <max@maxmouchet.com>"]
 license = "MIT"
+packages = [
+    { include = "krypton" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
@@ -15,6 +18,16 @@ black = "^19.10b0"
 pylint = "^2.4.4"
 pytest = "^5.4.1"
 pre-commit = "^2.2.0"
+
+[tool.isort]
+# https://github.com/timothycrosley/isort/issues/694
+# => Interopability with black
+# => https://github.com/psf/black#how-black-wraps-lines
+force_grid_wrap = 0
+include_trailing_comma = true
+multi_line_output = 3
+use_parentheses = true
+line_length = 88
 
 [build-system]
 requires = ["poetry>=0.12"]
