@@ -1,10 +1,16 @@
-from typing import Dict
-
-
 class KryptonException(Exception):
     api_type = ""
+    mapping = {}
 
-    def __init__(self, error: Dict):
+    def __new__(cls, error):
+        subclass = cls.mapping[error["type"]]
+        return super().__new__(subclass)
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        cls.mapping[cls.api_type] = cls
+
+    def __init__(self, error):
         super().__init__(error["message"])
 
 
@@ -32,8 +38,8 @@ class EmailNotSentError(KryptonException):
     api_type = "EmailNotSentError"
 
 
-class UserNotFound(KryptonException):
-    api_type = "UserNotFound"
+class UserNotFoundError(KryptonException):
+    api_type = "UserNotFoundError"
 
 
 class UnauthorizedError(KryptonException):
@@ -50,20 +56,3 @@ class UserValidationError(KryptonException):
 
 class AlreadyLoggedInError(KryptonException):
     api_type = "AlreadyLoggedInError"
-
-
-exceptions = [
-    GraphQLError,
-    EmailAlreadyExistsError,
-    UsernameAlreadyExistsError,
-    WrongPasswordError,
-    UpdatePasswordTooLateError,
-    EmailNotSentError,
-    UserNotFound,
-    UnauthorizedError,
-    EmailAlreadyConfirmedError,
-    UserValidationError,
-    AlreadyLoggedInError,
-]
-
-ExceptionMapping = {exc.api_type: exc for exc in exceptions}

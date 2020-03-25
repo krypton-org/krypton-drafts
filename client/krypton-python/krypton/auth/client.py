@@ -1,23 +1,18 @@
-from typing import Any, Dict, Optional, Tuple
-
 import jwt
 import requests
 
-from .exceptions import ExceptionMapping, UnauthorizedError
-from .queries import (
-    DeleteQuery,
-    LoginQuery,
-    Query,
-    RefreshQuery,
-    RegisterQuery,
-    UpdateQuery,
-)
+from .exceptions import KryptonException, UnauthorizedError
+from .queries import DeleteQuery, LoginQuery, RefreshQuery, RegisterQuery, UpdateQuery
 
 
 class UserToken:
     def __init__(self, user, token):
         self.user = user
         self.token = token
+
+    @property
+    def header(self):
+        return f"Bearer {self.token}"
 
     @classmethod
     def from_token(cls, token):
@@ -29,17 +24,23 @@ class KryptonAuthClient:
     def __init__(self, endpoint: str):
         self.endpoint = endpoint
         self.session = requests.Session()
-        self.token: Optional[UserToken] = None
+        self.token = None
 
-    def __post(self, q: Query) -> Dict:
-        res = self.session.post(self.endpoint, json=q.to_dict()).json()
+    def __post(self, **kwargs):
+        if self.token:
+            self.session.headers.update({"Authorization": self.token.header})
+        res = self.session.post(self.endpoint, **kwargs)
+        return dict(res.json())
+
+    def __query(self, q):
+        res = self.__post(json=q.to_dict())
+
         if "errors" in res:
             error = res["errors"][0]
-            raise ExceptionMapping[error["type"]](error)
-        return dict(res["data"])
+            raise KryptonException(error)
 
-    def __query(self, q: Query) -> Dict:
-        data = self.__post(q)
+        # We *must* have data if there is no errors.
+        data = res["data"]
 
         token = (
             data.get("login", {})
@@ -49,11 +50,10 @@ class KryptonAuthClient:
 
         if token:
             self.token = UserToken.from_token(token)
-            self.session.headers.update({"Authorization": f"Bearer {token}"})
 
         return data
 
-    def query(self, q: Query) -> Dict:
+    def query(self, q):
         try:
             result = self.__query(q)
         except UnauthorizedError:
@@ -61,18 +61,18 @@ class KryptonAuthClient:
             result = self.__query(q)
         return result
 
-    def refresh(self) -> None:
+    def refresh(self):
         self.query(RefreshQuery())
 
-    def register(self, username: str, email: str, password: str, **kwargs: Any):
+    def register(self, username, email, password, **kwargs):
         fields = {"username": username, "email": email, "password": password, **kwargs}
         self.query(RegisterQuery(fields=fields))
 
-    def login(self, login: str, password: str):
+    def login(self, login, password):
         self.query(LoginQuery(login=login, password=password))
 
-    def update(self, **kwargs: Any):
+    def update(self, **kwargs):
         self.query(UpdateQuery(fields=kwargs))
 
-    def delete(self, password: str):
+    def delete(self, password):
         self.query(DeleteQuery(password=password))

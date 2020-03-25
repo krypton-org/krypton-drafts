@@ -1,20 +1,14 @@
-from typing import Any, Dict
-
-
 class Query:
     query = ""
-    "GraphQL query"
+    variables = {}
 
-    variables: Dict = {}
-    "GraphQL variables"
-
-    def __init__(self, **variables: Any):
+    def __init__(self, **variables):
         self.variables = variables
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return f"{self.__class__.__name__}({self.variables})"
 
-    def to_dict(self) -> Dict:
+    def to_dict(self):
         return {"query": self.query, "variables": self.variables}
 
 
@@ -25,9 +19,7 @@ class RefreshQuery(Query):
 class RegisterQuery(Query):
     query = """
         mutation register($fields: UserRegisterInput!) {
-            register(fields: $fields) {
-                notifications { type }
-            }
+            register(fields: $fields)
         }
     """
 
@@ -46,7 +38,7 @@ class UpdateQuery(Query):
     query = """
             mutation updateMe($fields: UserUpdateInput!) {
                 updateMe(fields: $fields) {
-                    notifications { type }
+                    token
                 }
             }
         """
@@ -55,8 +47,6 @@ class UpdateQuery(Query):
 class DeleteQuery(Query):
     query = """
             mutation deleteMe($password: String!) {
-                deleteMe(password: $password) {
-                    notifications { type }
-                }
+                deleteMe(password: $password)
             }
         """
