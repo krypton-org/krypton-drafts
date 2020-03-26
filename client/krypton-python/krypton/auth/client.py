@@ -62,7 +62,7 @@ class KryptonAuthClient:
         return result
 
     def refresh(self):
-        self.query(RefreshQuery())
+        self.__query(RefreshQuery())
 
     def register(self, username, email, password, **kwargs):
         fields = {"username": username, "email": email, "password": password, **kwargs}
