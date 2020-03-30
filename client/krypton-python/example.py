@@ -7,7 +7,7 @@ client = KryptonAuthClient("https://nusid.net/krypton-auth/auth")
 # client = KryptonAuthClient("http://localhost:5000/auth")
 
 username = str(uuid.uuid4())
-password = str(uuid.uuid4())
+password = username
 email = f"{username}@example.com"
 
 client.register(email, password)
