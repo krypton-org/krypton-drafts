@@ -22,7 +22,6 @@ User clients must implement the following **public** API:
 #### Unauthenticated requests
 
 - `emailAvailable(email: str) -> boolean`
-- `usernameAvailable(username: str) -> boolean`
 - `register(email: str, password: str, **fields) -> (boolean, Optional[Error])`
 - `login(email: str, password: str) -> (Optional[Dict], Optional[Error])`
 - `resetPassword(email: str) -> boolean`
@@ -32,7 +31,6 @@ User clients must implement the following **public** API:
 - `userCount(**filters) -> integer`
 - `userPagination(page: int, perPage: int, sort: enum[sorts], **filters) -> (Optional[Dict] , Optional[Error])`
 
-The choice between `registerWithEmail` and `registerWithUsernameAndEmail` functions depends on the option `hasUsername: boolean` set on Krypton Authentication (server side).
 In the `login` and `refreshToken` functions, the user is decoded from the token returned by the server.
 In the `user...` functions, all public fields are requested.**
 
@@ -81,8 +79,8 @@ If permitted by the language, errors must be raised as typed exceptions, such th
 client = KryptonClient()
 try:
   client.register(...)
-except UsernameAlreadyExistsError:
-  print('Username already exists...')
+except EmailAlreadyExistsError:
+  print('Email already exists...')
 ```
 
 Error messages and their internationalization must be provided by the client.

@@ -26,8 +26,8 @@ class RegisterQuery(Query):
 
 class LoginQuery(Query):
     query = """
-            mutation login($login: String!, $password: String!) {
-                login(login: $login, password: $password) {
+            mutation login($email: String!, $password: String!) {
+                login(email: $email, password: $password) {
                     token
                 }
             }
