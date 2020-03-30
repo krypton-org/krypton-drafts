@@ -23,16 +23,12 @@ User clients must implement the following **public** API:
 
 - `emailAvailable(email: str) -> boolean`
 - `usernameAvailable(username: str) -> boolean`
-- `registerWithEmail(email: str, password: str, **fields) -> (boolean, Optional[Error])`
-- `registerWithUsernameAndEmail(username: str, email: str, password: str, **fields) -> (boolean, Optional[Error])`
-- `login(login: str, password: str) -> (Optional[Dict], Optional[Error])`
+- `register(email: str, password: str, **fields) -> (boolean, Optional[Error])`
+- `login(email: str, password: str) -> (Optional[Dict], Optional[Error])`
 - `resetPassword(email: str) -> boolean`
 - `userOne(**fields) -> (Optional[Dict], Optional[Error])`
-- `userById(id: str) -> (Optional[Dict], Optional[Error])`
 - `userByIds(ids: List[str]) -> (List[Dict], Optional[Error])`
 - `userMany(sort: enum[sorts], skip: integer, limit: integer, **filters) -> (List[Dict], Optional[Error])`
-- `userMany(**filters) -> (List[Dict], Optional[Error])`
-- `userMany(sort: enum[sorts],**filters) -> (List[Dict], Optional[Error])`
 - `userCount(**filters) -> integer`
 - `userPagination(page: int, perPage: int, sort: enum[sorts], **filters) -> (Optional[Dict] , Optional[Error])`
 
