@@ -21,11 +21,6 @@ class GraphQLError(KryptonException):
 class EmailAlreadyExistsError(KryptonException):
     api_type = "EmailAlreadyExistsError"
 
-
-class UsernameAlreadyExistsError(KryptonException):
-    api_type = "UsernameAlreadyExistsError"
-
-
 class WrongPasswordError(KryptonException):
     api_type = "WrongPasswordError"
 

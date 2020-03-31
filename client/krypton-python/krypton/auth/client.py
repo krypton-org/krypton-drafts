@@ -64,12 +64,12 @@ class KryptonAuthClient:
     def refresh(self):
         self.__query(RefreshQuery())
 
-    def register(self, username, email, password, **kwargs):
-        fields = {"username": username, "email": email, "password": password, **kwargs}
+    def register(self, email, password, **kwargs):
+        fields = {"email": email, "password": password, **kwargs}
         self.query(RegisterQuery(fields=fields))
 
-    def login(self, login, password):
-        self.query(LoginQuery(login=login, password=password))
+    def login(self, email, password):
+        self.query(LoginQuery(email=email, password=password))
 
     def update(self, **kwargs):
         self.query(UpdateQuery(fields=kwargs))
