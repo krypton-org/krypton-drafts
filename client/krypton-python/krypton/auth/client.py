@@ -38,10 +38,11 @@ class KryptonAuthClient:
         res = self.post(json=q.to_dict())
 
         if "errors" in res:
-            if try_refresh:
+            err = KryptonException(res["errors"][0])
+            if isinstance(err, UnauthorizedError) and try_refresh:
                 self.query(RefreshQuery(), try_refresh=False)
                 return self.query(q, try_refresh=False)
-            raise KryptonException(res["errors"][0])
+            raise err
 
         # We *must* have data if there is no errors.
         data = res["data"]
