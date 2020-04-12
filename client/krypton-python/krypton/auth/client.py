@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import jwt
 import requests
 
@@ -5,10 +7,10 @@ from .exceptions import KryptonException, UnauthorizedError
 from .queries import DeleteQuery, LoginQuery, RefreshQuery, RegisterQuery, UpdateQuery
 
 
+@dataclass(frozen=True)
 class UserToken:
-    def __init__(self, user, token):
-        self.user = user
-        self.token = token
+    user: dict
+    token: str
 
     @property
     def header(self):

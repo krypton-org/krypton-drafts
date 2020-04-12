@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from krypton.auth import KryptonAuthClient
+from krypton.auth import KryptonAuthClient, UserToken
 
 client = KryptonAuthClient("https://nusid.net/krypton-auth/auth")
 # client = KryptonAuthClient("http://localhost:5000/auth")
@@ -20,7 +20,7 @@ client.update(email=f"{username}-update@example.com")
 print(f"Update success: {client.token.user}")
 
 print(f"Test token refreshing")
-client.token.token = "zzz"
+client.token = UserToken({}, "invalid")
 
 client.update(email=f"{username}-update2@example.com")
 print(f"Update success: {client.token.user}")
