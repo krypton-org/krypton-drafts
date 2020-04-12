@@ -26,18 +26,20 @@ class KryptonAuthClient:
         self.session = requests.Session()
         self.token = None
 
-    def __post(self, **kwargs):
+    def post(self, **kwargs):
         if self.token:
             self.session.headers.update({"Authorization": self.token.header})
         res = self.session.post(self.endpoint, **kwargs)
-        return dict(res.json())
+        return res.json()
 
-    def __query(self, q):
-        res = self.__post(json=q.to_dict())
+    def query(self, q, try_refresh=True):
+        res = self.post(json=q.to_dict())
 
         if "errors" in res:
-            error = res["errors"][0]
-            raise KryptonException(error)
+            if try_refresh:
+                self.query(RefreshQuery(), try_refresh=False)
+                return self.query(q, try_refresh=False)
+            raise KryptonException(res["errors"][0])
 
         # We *must* have data if there is no errors.
         data = res["data"]
@@ -52,17 +54,6 @@ class KryptonAuthClient:
             self.token = UserToken.from_token(token)
 
         return data
-
-    def query(self, q):
-        try:
-            result = self.__query(q)
-        except UnauthorizedError:
-            self.refresh()
-            result = self.__query(q)
-        return result
-
-    def refresh(self):
-        self.__query(RefreshQuery())
 
     def register(self, email, password, **kwargs):
         fields = {"email": email, "password": password, **kwargs}
